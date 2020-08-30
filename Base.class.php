@@ -160,7 +160,8 @@
         protected function _attempt(\Closure $closure, int $attempt = 1): ?string
         {
             try {
-                $response = call_user_func($closure);
+                $args = array();
+                $response = call_user_func_array($closure, $args);
                 if ($attempt !== 1) {
                     $msg = 'Subsequent success on attempt #' . ($attempt);
                     $this->_log($msg);
@@ -201,19 +202,6 @@
             }
             $this->_log(... $values);
             return true;
-        }
-
-        /**
-         * _get
-         * 
-         * @access  protected
-         * @return  null|mixed
-         */
-        protected function _get()
-        {
-            $response = $this->_requestURL();
-            $response = $this->_getParsedTextResponse($response) ?? $this->_getParsedJSONResponse($response) ?? null;
-            return $response;
         }
 
         /**
@@ -349,6 +337,19 @@
             $requestData = $this->_getRequestData();
             $url = $this->_addURLParams($url, $requestData);
             return $url;
+        }
+
+        /**
+         * _getURL
+         * 
+         * @access  protected
+         * @return  null|mixed
+         */
+        protected function _getURLResponse()
+        {
+            $response = $this->_requestURL();
+            $response = $this->_getParsedTextResponse($response) ?? $this->_getParsedJSONResponse($response) ?? null;
+            return $response;
         }
 
         /**
@@ -520,7 +521,7 @@
                 $msg = '$url not set';
                 throw new \Exception($msg);
             }
-            $response = $this->_get();
+            $response = $this->_getURLResponse();
             return $response;
         }
 
@@ -550,13 +551,15 @@
          * mergeRequestData
          * 
          * @access  public
-         * @param   array $incomingRequestData
+         * @param   array $values,...
          * @return  void
          */
-        public function mergeRequestData(array $incomingRequestData): void
+        public function mergeRequestData(... $values): void
         {
             $requestData = $this->_requestData;
-            $requestData = array_merge($requestData, $incomingRequestData);
+            foreach ($values as $value) {
+                $requestData = array_merge($requestData, $value);
+            }
             $this->setRequestData($requestData);
         }
 

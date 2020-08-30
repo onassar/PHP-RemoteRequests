@@ -65,19 +65,6 @@
         protected $_paginationApproach = 'pages';
 
         /**
-         * _get
-         * 
-         * @access  protected
-         * @return  null|mixed
-         */
-        protected function _get()
-        {
-            $this->setExpectedResponseFormat('json');
-            $response = parent::_get();
-            return $response;
-        }
-
-        /**
          * _getPage
          * 
          * Returns the page number that any outbound queries should be set as
@@ -113,20 +100,6 @@
         }
 
         /**
-         * _getRequestData
-         * 
-         * @access  protected
-         * @return  array
-         */
-        protected function _getRequestData(): array
-        {
-            $requestData = parent::_getRequestData();
-            $paginationRequestData = $this->_getPaginationRequestData();
-            $requestData = array_merge($requestData, $paginationRequestData);
-            return $requestData;
-        }
-
-        /**
          * _getResultsPerPage
          * 
          * @access  protected
@@ -138,6 +111,19 @@
             $maxPerPage = $this->_maxPerPage;
             $resultsPerPage = min($limit, $maxPerPage);
             return $resultsPerPage;
+        }
+
+        /**
+         * _getURL
+         * 
+         * @access  protected
+         * @return  null|mixed
+         */
+        protected function _getURLResponse()
+        {
+            $this->setExpectedResponseFormat('json');
+            $response = parent::_getURLResponse();
+            return $response;
         }
 
         /**

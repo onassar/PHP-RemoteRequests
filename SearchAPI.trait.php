@@ -95,8 +95,9 @@
          */
         protected function _setSearchRequestData(string $query): void
         {
+            $paginationRequestData = $this->_getPaginationRequestData();
             $queryRequestData = $this->_getQueryRequestData($query);
-            $this->mergeRequestData($queryRequestData);
+            $this->mergeRequestData($queryRequestData, $paginationRequestData);
         }
 
         /**
@@ -125,7 +126,7 @@
             $this->_setSearchRequestData($query);
             $this->_setSearchRequestURL();
             $key = $this->_responseResultsIndex;
-            $response = $this->_get() ?? array();
+            $response = $this->_getURLResponse() ?? array();
             $results = $response[$key] ?? array();
             if (empty($results) === true) {
                 return $results;
