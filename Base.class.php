@@ -206,37 +206,14 @@
         /**
          * _get
          * 
-         * @throws  \Exception
          * @access  protected
          * @return  null|mixed
          */
         protected function _get()
         {
-            // Failed request
             $response = $this->_requestURL();
-            if ($response === null) {
-                return null;
-            }
-
-            // plain/text response
-            $expectedResponseFormat = $this->_expectedResponseFormat;
-            if ($expectedResponseFormat === 'plain/text') {
-                return $response;
-            }
-
-            // JSON response
-            if ($expectedResponseFormat === 'json') {
-                json_decode($response);
-                if (json_last_error() !== JSON_ERROR_NONE) {
-                    return null;
-                }
-                $response = json_decode($response, true);
-                return $response;
-            }
-
-            // Invalid expected response format set
-            $msg = 'Invalid expected response format set';
-            throw new \Exception($msg);
+            $response = $this->_getParsedTextResponse($response) ?? $this->_getParsedJSONResponse($response) ?? null;
+            return $response;
         }
 
         /**
@@ -249,6 +226,49 @@
         {
             $headers = array();
             return $headers;
+        }
+
+        /**
+         * _getParsedJSONResponse
+         * 
+         * @access  protected
+         * @param   null|string $response
+         * @return  null|array
+         */
+        protected function _getParsedJSONResponse(?string $response): ?array
+        {
+            if ($response === null) {
+                return null;
+            }
+            $expectedResponseFormat = $this->_expectedResponseFormat;
+            if ($expectedResponseFormat !== 'json') {
+                return null;
+            }
+            json_decode($response);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return null;
+            }
+            $response = json_decode($response, true);
+            return $response;
+        }
+
+        /**
+         * _getParsedTextResponse
+         * 
+         * @access  protected
+         * @param   null|string $response
+         * @return  null|string
+         */
+        protected function _getParsedTextResponse(?string $response): ?string
+        {
+            if ($response === null) {
+                return null;
+            }
+            $expectedResponseFormat = $this->_expectedResponseFormat;
+            if ($expectedResponseFormat !== 'plain/text') {
+                return null;
+            }
+            return $response;
         }
 
         /**

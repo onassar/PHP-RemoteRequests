@@ -6,7 +6,7 @@
     /**
      * Pagination
      * 
-     * Class that helps facilitate paginated requests (which presumes that 
+     * Trait that helps facilitate paginated requests (which presumes that 
      * responses are coming in as JSON).
      * 
      * @link    https://github.com/onassar/PHP-RemoteRequests
@@ -17,27 +17,29 @@
         /**
          * _limit
          * 
-         * This property is used to define the maximum number of objects to
-         * attempt to retrieve, before stopping any possible recursive-requests
-         * and sending back the response.
+         * The $limit property should be used to define how many objects are
+         * desirable, regardless of how many objects are returned by an API
+         * call.
+         * 
+         * If this value is greater than the $maxPerPage value, then recursive
+         * calls may be made.
          * 
          * @access  protected
-         * @var     int (default: 40)
+         * @var     null|int (default: null)
          */
-        protected $_limit = 40;
+        protected $_limit = null;
 
         /**
          * _maxPerPage
          * 
-         * This property is used to limit the possible response to a specific
-         * number of objects. It's important this is seen as different from
-         * $limit in that $limit is more about when to stop making recursive
-         * calls, where as this is about how many objects to request _per_ call.
+         * The $maxPerPage property defines the maximum number of objects that
+         * can be retrieved through an API endpoint. This is defined by _them_,
+         * and has nothing to do with application and/or business logic.
          * 
          * @access  protected
-         * @var     int (default: 40)
+         * @var     null|int (default: null)
          */
-        protected $_maxPerPage = 40;
+        protected $_maxPerPage = null;
 
         /**
          * _offset
@@ -77,6 +79,9 @@
 
         /**
          * _getPage
+         * 
+         * Returns the page number that any outbound queries should be set as
+         * using the $offset to determine what the "next" page would be.
          * 
          * @access  protected
          * @return  int
