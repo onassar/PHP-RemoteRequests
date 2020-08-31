@@ -31,6 +31,8 @@ echo $response;
 exit(0);
 ```
 
+***
+
 ### Sample JSON Request
 
 ``` php
@@ -52,6 +54,8 @@ $arr = $client->get('https://example.org/file.json') ?? array();
 print_r($arr);
 exit(0);
 ```
+
+***
 
 ### Sample Request Data
 
@@ -78,6 +82,8 @@ $response = $client->get('https://example.org/') ?? 'Could not load response';
 echo $response;
 exit(0);
 ```
+
+***
 
 ### Sample cURL Request
 
