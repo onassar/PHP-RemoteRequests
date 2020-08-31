@@ -110,7 +110,7 @@
          */
         protected function _getURLResponse()
         {
-            $this->setExpectedResponseFormat('json');
+            $this->setExpectedResponseContentType('application/json');
             $response = parent::_getURLResponse();
             return $response;
         }

@@ -30,12 +30,12 @@
         protected $_debugMode = false;
 
         /**
-         * _expectedResponseFormat
+         * _expectedResponseContentType
          * 
          * @access  protected
          * @var     string (default: 'plain/text')
          */
-        protected $_expectedResponseFormat = 'plain/text';
+        protected $_expectedResponseContentType = 'plain/text';
 
         /**
          * _ignoreErrors
@@ -227,8 +227,8 @@
             if ($response === null) {
                 return null;
             }
-            $expectedResponseFormat = $this->_expectedResponseFormat;
-            if ($expectedResponseFormat !== 'json') {
+            $expectedResponseContentType = $this->_expectedResponseContentType;
+            if ($expectedResponseContentType !== 'application/json') {
                 return null;
             }
             json_decode($response);
@@ -251,8 +251,8 @@
             if ($response === null) {
                 return null;
             }
-            $expectedResponseFormat = $this->_expectedResponseFormat;
-            if ($expectedResponseFormat !== 'plain/text') {
+            $expectedResponseContentType = $this->_expectedResponseContentType;
+            if ($expectedResponseContentType !== 'plain/text') {
                 return null;
             }
             return $response;
@@ -600,15 +600,15 @@
         }
 
         /**
-         * setExpectedResponseFormat
+         * setExpectedResponseContentType
          * 
          * @access  public
-         * @param   string $expectedResponseFormat
+         * @param   string $expectedResponseContentType
          * @return  void
          */
-        public function setExpectedResponseFormat(string $expectedResponseFormat): void
+        public function setExpectedResponseContentType(string $expectedResponseContentType): void
         {
-            $this->_expectedResponseFormat = $expectedResponseFormat;
+            $this->_expectedResponseContentType = $expectedResponseContentType;
         }
 
         /**
