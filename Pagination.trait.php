@@ -54,17 +54,6 @@
         protected $_offset = 0;
 
         /**
-         * _paginationApproach
-         * 
-         * Property which allows for either page-based pagination or
-         * offset-based pagination.
-         * 
-         * @access  protected
-         * @var     string (default: 'pages')
-         */
-        // protected $_paginationApproach = 'pages';
-
-        /**
          * _getPage
          * 
          * Returns the page number that any outbound queries should be set as
@@ -178,16 +167,4 @@
         {
             $this->_offset = $offset;
         }
-
-        /**
-         * setPaginationApproach
-         * 
-         * @access  public
-         * @param   string $paginationApproach
-         * @return  void
-         */
-        // public function setPaginationApproach(string $paginationApproach): void
-        // {
-        //     $this->_paginationApproach = $paginationApproach;
-        // }
     }

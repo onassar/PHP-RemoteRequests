@@ -1,6 +1,15 @@
 # PHP-RemoteRequests
-PHP base class to provide remote object request core functionality (including
-pagination, rate limit lookups, etc).
+PHP HTTP request class (and traits) to provide remote request functionality
+(including pagination, rate limit lookups and standard 3rd-party search API methods).
+
+Features include:
+- Requests using cURL
+- Requests using streams
+- Recursive requests
+- Rate limit access
+- Multi-attempts (with sleep calls between attempts)
+- Header access
+- JSON parsing
 
 ### Example `onassar\RemoteObjectRequest\Base` requests
 
