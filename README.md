@@ -22,6 +22,15 @@ echo $response;
 exit(0);
 ```
 
+### Sample Request (short)
+
+``` php
+$client = new onassar\RemoteRequests\Base();
+$response = $client->get('https://example.org/') ?? 'Could not load response';
+echo $response;
+exit(0);
+```
+
 ### Sample JSON Request
 
 ``` php
@@ -30,6 +39,16 @@ $client->setExpectedResponseContentType('application/json');
 $url = 'https://example.org/file.json';
 $client->setURL($url);
 $arr = $client->get() ?? array();
+print_r($arr);
+exit(0);
+```
+
+### Sample JSON Request (short)
+
+``` php
+$client = new onassar\RemoteRequests\Base();
+$client->setExpectedResponseContentType('application/json');
+$arr = $client->get('https://example.org/file.json') ?? array();
 print_r($arr);
 exit(0);
 ```
@@ -48,6 +67,18 @@ echo $response;
 exit(0);
 ```
 
+### Sample Request Data (short)
+
+``` php
+$client = new onassar\RemoteRequests\Base();
+$param = 'value';
+$requestData = compact('param');
+$client->setRequestData($requestData);
+$response = $client->get('https://example.org/') ?? 'Could not load response';
+echo $response;
+exit(0);
+```
+
 ### Sample cURL Request
 
 ``` php
@@ -56,6 +87,16 @@ $client->setRequestApproach('cURL');
 $url = 'https://example.org';
 $client->setURL($url);
 $response = $client->get() ?? 'Could not load response';
+echo $response;
+exit(0);
+```
+
+### Sample cURL Request (short)
+
+``` php
+$client = new onassar\RemoteRequests\Base();
+$client->setRequestApproach('cURL');
+$response = $client->get('https://example.org') ?? 'Could not load response';
 echo $response;
 exit(0);
 ```

@@ -511,15 +511,17 @@
          * 
          * @throws  \Exception
          * @access  public
+         * @param   null|string $url (default: null)
          * @return  mixed
          */
-        public function get()
+        public function get(?string $url = null)
         {
-            $url = $this->_url;
+            $url = $url ?? $this->_url ?? null;
             if ($url === null) {
                 $msg = '$url not set';
                 throw new \Exception($msg);
             }
+            $this->setURL($url);
             $response = $this->_getURLResponse();
             return $response;
         }
