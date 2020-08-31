@@ -11,7 +11,7 @@ Features include:
 - Header access
 - JSON parsing
 
-### Example `onassar\RemoteRequests\Base` request
+### Sample Request
 
 ``` php
 $client = new onassar\RemoteRequests\Base();
@@ -25,3 +25,10 @@ $response = $client->get() ?? 'Could not load response';
 echo $response;
 exit(0);
 ```
+
+### Related libraries
+- [getstencil/PHP-Iconfinder](https://github.com/getstencil/PHP-Iconfinder)
+- [onassar/PHP-Icons8](https://github.com/onassar/PHP-Icons8)
+- [onassar/PHP-Pexels](https://github.com/onassar/PHP-Pexels)
+- [onassar/PHP-Pixabay](https://github.com/onassar/PHP-Pixabay)
+- [onassar/PHP-Unsplash](https://github.com/onassar/PHP-Unsplash)

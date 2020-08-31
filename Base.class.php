@@ -27,8 +27,7 @@
          * @access  protected
          * @var     bool (default: false)
          */
-        // protected $_debugMode = false;
-        protected $_debugMode = true;
+        protected $_debugMode = false;
 
         /**
          * _expectedResponseFormat
@@ -586,6 +585,18 @@
         public function setAttemptSleepDelay(int $attemptSleepDelay): void
         {
             $this->_attemptSleepDelay = $attemptSleepDelay;
+        }
+
+        /**
+         * setDebugMode
+         * 
+         * @access  public
+         * @param   bool $debugMode
+         * @return  void
+         */
+        public function setDebugMode(bool $debugMode): void
+        {
+            $this->_debugMode = $debugMode;
         }
 
         /**
