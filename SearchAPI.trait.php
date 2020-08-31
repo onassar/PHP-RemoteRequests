@@ -47,9 +47,10 @@
          * _getAuthRequestData
          * 
          * @access  protected
+         * @param   string $requestType
          * @return  array
          */
-        protected function _getAuthRequestData(): array
+        protected function _getAuthRequestData(string $requestType): array
         {
             $authRequestData = array();
             return $authRequestData;
@@ -95,7 +96,7 @@
          */
         protected function _getSearchRequestURL(): string
         {
-            $host = $this->_host;
+            $host = $this->_hosts['search'] ?? $this->_host;
             $path = $this->_paths['search'];
             $url = 'https://' . ($host) . ($path);
             return $url;
@@ -126,7 +127,7 @@
          */
         protected function _setSearchRequestData(string $query): void
         {
-            $authRequestData = $this->_getAuthRequestData();
+            $authRequestData = $this->_getAuthRequestData('search');
             $paginationRequestData = $this->_getPaginationRequestData();
             $queryRequestData = $this->_getSearchQueryRequestData($query);
             $args = array($authRequestData, $queryRequestData, $paginationRequestData);
@@ -168,7 +169,7 @@
             // Format + more than enough found
             $results = $this->_formatSearchResults($results, $query);
             $resultsCount = count($results);
-            $mod = $this->_offset % $this->_getResultsPerPage();
+            $mod = $this->_offset % $this->_getResultsPerRequest();
             if ($mod !== 0) {
                 array_splice($results, 0, $mod);
             }
@@ -177,7 +178,7 @@
             if ($persistentResultsCount >= $this->_limit) {
                 return array_slice($persistentResults, 0, $this->_limit);
             }
-            if ($resultsCount < $this->_maxResultsPerPage) {
+            if ($resultsCount < $this->_maxResultsPerRequest) {
                 return array_slice($persistentResults, 0, $this->_limit);
             }
 

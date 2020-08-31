@@ -21,7 +21,7 @@
          * desirable, regardless of how many objects are returned by an API
          * call.
          * 
-         * If this value is greater than the $maxResultsPerPage value, then
+         * If this value is greater than the $maxResultsPerRequest value, then
          * recursive calls may be made.
          * 
          * @access  protected
@@ -30,16 +30,16 @@
         protected $_limit = null;
 
         /**
-         * _maxResultsPerPage
+         * _maxResultsPerRequest
          * 
-         * The $maxResultsPerPage property defines the maximum number of objects that
+         * The $maxResultsPerRequest property defines the maximum number of objects that
          * can be retrieved through an API endpoint. This is defined by _them_,
          * and has nothing to do with application and/or business logic.
          * 
          * @access  protected
          * @var     null|int (default: null)
          */
-        protected $_maxResultsPerPage = null;
+        protected $_maxResultsPerRequest = null;
 
         /**
          * _offset
@@ -76,7 +76,7 @@
         protected function _getPage(): int
         {
             $offset = $this->_offset;
-            $resultsPerPage = $this->_getResultsPerPage();
+            $resultsPerPage = $this->_getResultsPerRequest();
             $offset = $this->_roundToLower($offset, $resultsPerPage);
             $page = ceil($offset / $resultsPerPage) + 1;
             return $page;
@@ -91,7 +91,7 @@
         protected function _getPaginationRequestData(): array
         {
             $page = $this->_getPage();
-            $resultsPerPage = $this->_getResultsPerPage();
+            $resultsPerPage = $this->_getResultsPerRequest();
             $paginationRequestData = array(
                 'page' => $page,
                 'per_page' => $resultsPerPage
@@ -100,16 +100,16 @@
         }
 
         /**
-         * _getResultsPerPage
+         * _getResultsPerRequest
          * 
          * @access  protected
          * @return  int
          */
-        protected function _getResultsPerPage(): int
+        protected function _getResultsPerRequest(): int
         {
             $limit = $this->_limit;
-            $maxResultsPerPage = $this->_maxResultsPerPage;
-            $resultsPerPage = min($limit, $maxResultsPerPage);
+            $maxResultsPerRequest = $this->_maxResultsPerRequest;
+            $resultsPerPage = min($limit, $maxResultsPerRequest);
             return $resultsPerPage;
         }
 
@@ -159,12 +159,12 @@
          * setMaxPerPage
          * 
          * @access  public
-         * @param   int $maxResultsPerPage
+         * @param   int $maxResultsPerRequest
          * @return  void
          */
-        public function setMaxPerPage(int $maxResultsPerPage): void
+        public function setMaxPerPage(int $maxResultsPerRequest): void
         {
-            $this->_maxResultsPerPage = $maxResultsPerPage;
+            $this->_maxResultsPerRequest = $maxResultsPerRequest;
         }
 
         /**
