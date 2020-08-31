@@ -11,7 +11,7 @@ Features include:
 - Header access
 - JSON parsing
 
-### Example `onassar\RemoteObjectRequest\Base` requests
+### Example `onassar\RemoteRequests\Base` request
 
 ``` php
 $client = new onassar\RemoteRequests\Base();
