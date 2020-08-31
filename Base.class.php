@@ -429,7 +429,7 @@
         {
             $closure = function() {
                 $url = $this->_getRequestURL();
-                $this->_debugModeLog('curl', $url);
+                $this->_debugModeLog('cURL', $url);
                 $requestTimeout = $this->_requestTimeout;
                 $headers = $this->_getCURLRequestHeaders();
                 $ch = curl_init($url);
