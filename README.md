@@ -15,11 +15,33 @@ Features include:
 
 ``` php
 $client = new onassar\RemoteRequests\Base();
-$client->setExpectedResponseFormat('plain/text');
-$url = 'https://google.com';
+$url = 'https://example.org';
 $client->setURL($url);
-$utm = 'campaign-name';
-$requestData = compact('utm');
+$response = $client->get() ?? 'Could not load response';
+echo $response;
+exit(0);
+```
+
+### Sample JSON Request
+
+``` php
+$client = new onassar\RemoteRequests\Base();
+$client->setExpectedResponseContentType('application/json');
+$url = 'https://example.org/file.json';
+$client->setURL($url);
+$arr = $client->get() ?? array();
+print_r($arr);
+exit(0);
+```
+
+### Sample Request Data
+
+``` php
+$client = new onassar\RemoteRequests\Base();
+$url = 'https://example.org';
+$client->setURL($url);
+$param = 'value';
+$requestData = compact('param');
 $client->setRequestData($requestData);
 $response = $client->get() ?? 'Could not load response';
 echo $response;
