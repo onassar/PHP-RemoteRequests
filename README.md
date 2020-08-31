@@ -48,6 +48,18 @@ echo $response;
 exit(0);
 ```
 
+### Sample cURL Request
+
+``` php
+$client = new onassar\RemoteRequests\Base();
+$client->setRequestApproach('cURL');
+$url = 'https://example.org';
+$client->setURL($url);
+$response = $client->get() ?? 'Could not load response';
+echo $response;
+exit(0);
+```
+
 ### Related libraries
 - [getstencil/PHP-Iconfinder](https://github.com/getstencil/PHP-Iconfinder)
 - [onassar/PHP-Icons8](https://github.com/onassar/PHP-Icons8)
