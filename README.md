@@ -1,7 +1,8 @@
 # PHP-RemoteRequests
-PHP base class to provide remote object request core functionality (including pagination, rate limit lookups, etc).
+PHP base class to provide remote object request core functionality (including
+pagination, rate limit lookups, etc).
 
-# Example `onassar\RemoteObjectRequest\Base` requests
+### Example `onassar\RemoteObjectRequest\Base` requests
 
 ``` php
 $client = new onassar\RemoteRequests\Base();
