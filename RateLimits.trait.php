@@ -30,9 +30,9 @@
          * 
          * @access  protected
          * @param   string $headerKey
-         * @return  null|int
+         * @return  null|int|string
          */
-        protected function _getRateLimitProperty(string $headerKey): ?int
+        protected function _getRateLimitProperty(string $headerKey)
         {
             $headerKey = strtolower($headerKey);
             $formattedHeaders = $this->getFormattedHeaders();
@@ -57,9 +57,9 @@
          * _getRateLimitResetValue
          * 
          * @access  protected
-         * @return  null|int
+         * @return  null|int|string
          */
-        protected function _getRateLimitResetValue(): ?int
+        protected function _getRateLimitResetValue()
         {
             $reset = $this->_getRateLimitProperty('X-Ratelimit-Reset');
             return $reset;

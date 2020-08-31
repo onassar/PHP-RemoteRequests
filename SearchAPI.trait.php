@@ -44,13 +44,44 @@
         }
 
         /**
-         * _getQueryRequestData
+         * _getAuthRequestData
+         * 
+         * @access  protected
+         * @return  array
+         */
+        protected function _getAuthRequestData(): array
+        {
+            $authRequestData = array();
+            return $authRequestData;
+        }
+
+        /**
+         * _getRandomString
+         * 
+         * @see     https://stackoverflow.com/questions/4356289/php-random-string-generator
+         * @access  protected
+         * @param   int $length (default: 32)
+         * @return  string
+         */
+        protected function _getRandomString(int $length = 32): string
+        {
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            return $randomString;
+        }
+
+        /**
+         * _getSearchQueryRequestData
          * 
          * @access  protected
          * @param   string $query
          * @return  array
          */
-        protected function _getQueryRequestData(string $query): array
+        protected function _getSearchQueryRequestData(string $query): array
         {
             $queryRequestData = compact('query');
             return $queryRequestData;
@@ -95,9 +126,11 @@
          */
         protected function _setSearchRequestData(string $query): void
         {
+            $authRequestData = $this->_getAuthRequestData();
             $paginationRequestData = $this->_getPaginationRequestData();
-            $queryRequestData = $this->_getQueryRequestData($query);
-            $this->mergeRequestData($queryRequestData, $paginationRequestData);
+            $queryRequestData = $this->_getSearchQueryRequestData($query);
+            $args = array($authRequestData, $queryRequestData, $paginationRequestData);
+            $this->mergeRequestData(... $args);
         }
 
         /**
@@ -117,10 +150,10 @@
          * 
          * @access  public
          * @param   string $query
-         * @param   array &persistent (default: array())
+         * @param   array &persistentResults (default: array())
          * @return  array
          */
-        public function search(string $query, array &$persistent = array()): array
+        public function search(string $query, array &$persistentResults = array()): array
         {
             // Request results
             $this->_setSearchRequestData($query);
@@ -139,18 +172,18 @@
             if ($mod !== 0) {
                 array_splice($results, 0, $mod);
             }
-            $persistent = array_merge($persistent, $results);
-            $persistentCount = count($persistent);
-            if ($persistentCount >= $this->_limit) {
-                return array_slice($persistent, 0, $this->_limit);
+            $persistentResults = array_merge($persistentResults, $results);
+            $persistentResultsCount = count($persistentResults);
+            if ($persistentResultsCount >= $this->_limit) {
+                return array_slice($persistentResults, 0, $this->_limit);
             }
-            if ($resultsCount < $this->_maxPerPage) {
-                return array_slice($persistent, 0, $this->_limit);
+            if ($resultsCount < $this->_maxResultsPerPage) {
+                return array_slice($persistentResults, 0, $this->_limit);
             }
 
             // Recursively get more
             $this->_offset += count($results);
-            return $this->search($query, $persistent);
+            return $this->search($query, $persistentResults);
         }
 
         /**

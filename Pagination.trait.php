@@ -21,8 +21,8 @@
          * desirable, regardless of how many objects are returned by an API
          * call.
          * 
-         * If this value is greater than the $maxPerPage value, then recursive
-         * calls may be made.
+         * If this value is greater than the $maxResultsPerPage value, then
+         * recursive calls may be made.
          * 
          * @access  protected
          * @var     null|int (default: null)
@@ -30,16 +30,16 @@
         protected $_limit = null;
 
         /**
-         * _maxPerPage
+         * _maxResultsPerPage
          * 
-         * The $maxPerPage property defines the maximum number of objects that
+         * The $maxResultsPerPage property defines the maximum number of objects that
          * can be retrieved through an API endpoint. This is defined by _them_,
          * and has nothing to do with application and/or business logic.
          * 
          * @access  protected
          * @var     null|int (default: null)
          */
-        protected $_maxPerPage = null;
+        protected $_maxResultsPerPage = null;
 
         /**
          * _offset
@@ -62,7 +62,7 @@
          * @access  protected
          * @var     string (default: 'pages')
          */
-        protected $_paginationApproach = 'pages';
+        // protected $_paginationApproach = 'pages';
 
         /**
          * _getPage
@@ -108,8 +108,8 @@
         protected function _getResultsPerPage(): int
         {
             $limit = $this->_limit;
-            $maxPerPage = $this->_maxPerPage;
-            $resultsPerPage = min($limit, $maxPerPage);
+            $maxResultsPerPage = $this->_maxResultsPerPage;
+            $resultsPerPage = min($limit, $maxResultsPerPage);
             return $resultsPerPage;
         }
 
@@ -159,12 +159,12 @@
          * setMaxPerPage
          * 
          * @access  public
-         * @param   int $maxPerPage
+         * @param   int $maxResultsPerPage
          * @return  void
          */
-        public function setMaxPerPage(int $maxPerPage): void
+        public function setMaxPerPage(int $maxResultsPerPage): void
         {
-            $this->_maxPerPage = $maxPerPage;
+            $this->_maxResultsPerPage = $maxResultsPerPage;
         }
 
         /**
@@ -186,8 +186,8 @@
          * @param   string $paginationApproach
          * @return  void
          */
-        public function setPaginationApproach(string $paginationApproach): void
-        {
-            $this->_paginationApproach = $paginationApproach;
-        }
+        // public function setPaginationApproach(string $paginationApproach): void
+        // {
+        //     $this->_paginationApproach = $paginationApproach;
+        // }
     }

@@ -528,6 +528,11 @@
         /**
          * getFormattedHeaders
          * 
+         * Returns a hash of the headers. The complicated nature of colon (:)
+         * lookups is because some headers have colons in multiple places (eg.
+         * date strings).
+         * 
+         * @see     https://i.imgur.com/ceCXWJs.png
          * @access  public
          * @return  array
          */
@@ -537,11 +542,19 @@
             $formattedHeaders = array();
             foreach ($headers as $header) {
                 $pieces = explode(':', $header);
-                if (count($pieces) !== 2) {
+                if (count($pieces) === 1) {
                     continue;
                 }
-                $key = trim($pieces[0]);
-                $value = trim($pieces[1]);
+                if (count($pieces) === 2) {
+                    $key = trim($pieces[0]);
+                    $value = trim($pieces[1]);
+                    $formattedHeaders[$key] = $value;
+                    continue;
+                }
+                $key = array_shift($pieces);
+                $key = trim($key);
+                $value = implode(':', $pieces);
+                $value = trim($value);
                 $formattedHeaders[$key] = $value;
             }
             return $formattedHeaders;
