@@ -28,6 +28,9 @@
         /**
          * _getRateLimitProperty
          * 
+         * In some cases, the return value has been a string that is an ISO
+         * formatted date. Whereas others will just return a unix timestamp.
+         * 
          * @access  protected
          * @param   string $headerKey
          * @return  null|int|string

@@ -74,6 +74,10 @@
         /**
          * _getPaginationRequestData
          * 
+         * Returns an array of pagination data that should be included in any
+         * requests. In the future, the keys should be defined as properties to
+         * allow for flexibility in URL params.
+         * 
          * @access  protected
          * @return  array
          */
@@ -145,13 +149,13 @@
         }
 
         /**
-         * setMaxPerPage
+         * setMaxResultsPerPage
          * 
          * @access  public
          * @param   int $maxResultsPerRequest
          * @return  void
          */
-        public function setMaxPerPage(int $maxResultsPerRequest): void
+        public function setMaxResultsPerPage(int $maxResultsPerRequest): void
         {
             $this->_maxResultsPerRequest = $maxResultsPerRequest;
         }
