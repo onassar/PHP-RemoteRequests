@@ -63,6 +63,14 @@
         protected $_logFunction = null;
 
         /**
+         * _logTraceFunction
+         * 
+         * @access  protected
+         * @var     null|callable (default: null)
+         */
+        protected $_logTraceFunction = null;
+
+        /**
          * _maxAttempts
          * 
          * @access  protected
@@ -186,9 +194,11 @@
             $delay = $this->_failedAttemptDelay;
             $maxAttempts = $this->_maxAttempts;
             $logFunction = array($this, 'log');
+            $logTraceFunction = array($this, 'logTrace');
             $riskyClosure->setDelay($delay);
-            $riskyClosure->setMaxAttempts($maxAttempts);
             $riskyClosure->setLogFunction($logFunction);
+            $riskyClosure->setLogTraceFunction($logTraceFunction);
+            $riskyClosure->setMaxAttempts($maxAttempts);
             list($exception, $response) = $riskyClosure->attempt();
             return $response;
         }
@@ -622,6 +632,29 @@
         }
 
         /**
+         * logTrace
+         * 
+         * @access  public
+         * @param   array $trace
+         * @return  bool
+         */
+        public function logTrace(array $trace): bool
+        {
+            if ($this->_quiet === true) {
+                return false;
+            }
+            if ($this->_logTraceFunction === null) {
+                $trace = implode("\n", $trace);
+                error_log($trace);
+                return false;
+            }
+            $closure = $this->_logTraceFunction;
+            $args = array($trace);
+            call_user_func_array($closure, $args);
+            return true;
+        }
+
+        /**
          * mergeRequestData
          * 
          * @access  public
@@ -695,6 +728,18 @@
         public function setLogFunction(callable $logFunction): void
         {
             $this->_logFunction = $logFunction;
+        }
+
+        /**
+         * setLogTraceFunction
+         * 
+         * @access  public
+         * @param   callable $logTraceFunction
+         * @return  void
+         */
+        public function setLogTraceFunction(callable $logTraceFunction): void
+        {
+            $this->_logTraceFunction = $logTraceFunction;
         }
 
         /**
