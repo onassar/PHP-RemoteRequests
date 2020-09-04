@@ -1,7 +1,7 @@
 <?php
 
     // Namespace overhead
-    namespace onassar\RemoteRequests;
+    namespace onassar\RemoteRequests\Traits;
 
     /**
      * SearchAPI
