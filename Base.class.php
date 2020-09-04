@@ -71,6 +71,14 @@
         protected $_maxAttempts = 2;
 
         /**
+         * _postContent
+         * 
+         * @access  protected
+         * @var     null|string (default: null)
+         */
+        protected $_postContent = null;
+
+        /**
          * _quiet
          * 
          * Whether or not messages should be logged to the system when closures
@@ -258,6 +266,18 @@
         }
 
         /**
+         * _getPOSTContent
+         * 
+         * @access  protected
+         * @return  null|string
+         */
+        protected function _getPOSTContent(): ?string
+        {
+            $postContent = $this->_postContent;
+            return $postContent;
+        }
+
+        /**
          * _getRequestData
          * 
          * @access  protected
@@ -317,6 +337,9 @@
                     'timeout' => $requestTimeout
                 )
             );
+            if ($requestMethod === 'POST') {
+                $options['http']['content'] = $this->_getPOSTContent();
+            }
             $options = array_merge($options, $this->_streamOptions);
             return $options;
         }
@@ -477,6 +500,18 @@
         {
             $headers = explode("\n", $headers);
             $this->_lastRemoteRequestHeaders = $headers;
+        }
+
+        /**
+         * _setPOSTContent
+         * 
+         * @access  protected
+         * @param   string $postContent
+         * @return  void
+         */
+        protected function _setPOSTContent(string $postContent): void
+        {
+            $this->_postContent = $postContent;
         }
 
         /**

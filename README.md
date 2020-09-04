@@ -10,6 +10,7 @@ Features include:
 - Multi-attempts (with sleep calls between attempts)
 - Header access
 - JSON parsing
+- `POST` requests (currently limited to `stream` requests)
 
 ### Sample Request
 
@@ -106,6 +107,9 @@ $response = $client->get('https://example.org') ?? 'Could not load response';
 echo $response;
 exit(0);
 ```
+
+### Todo
+- Support `POST` calls using the `cURL` request approach
 
 ### Note
 Requires
