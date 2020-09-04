@@ -102,6 +102,14 @@
         protected $_requestTimeout = 10;
 
         /**
+         * _streamOptions
+         * 
+         * @access  protected
+         * @var     array (default: array())
+         */
+        protected $_streamOptions = array();
+
+        /**
          * _url
          * 
          * @access  protected
@@ -318,6 +326,7 @@
                     'timeout' => $requestTimeout
                 )
             );
+            $options = array_merge($options, $this->_streamOptions);
             return $options;
         }
 
@@ -562,6 +571,18 @@
         }
 
         /**
+         * getHeaders
+         * 
+         * @access  public
+         * @return  array
+         */
+        public function getHeaders(): array
+        {
+            $headers = $this->_lastRemoteRequestHeaders ?? array();
+            return $headers;
+        }
+
+        /**
          * mergeRequestData
          * 
          * @access  public
@@ -703,13 +724,25 @@
         }
 
         /**
+         * setStreamOptions
+         * 
+         * @access  public
+         * @param   array $streamOptions
+         * @return  void
+         */
+        public function setStreamOptions(array $streamOptions): void
+        {
+            $this->_streamOptions = $streamOptions;
+        }
+
+        /**
          * setURL
          * 
          * @access  public
-         * @param   string $url
+         * @param   null|string $url
          * @return  void
          */
-        public function setURL(string $url): void
+        public function setURL(?string $url): void
         {
             $this->_url = $url;
         }
