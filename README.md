@@ -117,6 +117,7 @@ Requires
 
 ### Related libraries
 - [getstencil/PHP-Iconfinder](https://github.com/getstencil/PHP-Iconfinder)
+- [onassar/PHP-Bitly](https://github.com/onassar/PHP-Bitly)
 - [onassar/PHP-Icons8](https://github.com/onassar/PHP-Icons8)
 - [onassar/PHP-Pexels](https://github.com/onassar/PHP-Pexels)
 - [onassar/PHP-Pixabay](https://github.com/onassar/PHP-Pixabay)
