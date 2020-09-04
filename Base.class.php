@@ -2,6 +2,7 @@
 
     // Namespace overhead
     namespace onassar\RemoteRequests;
+    use onassar\RiskyClosure;
 
     /**
      * Base
@@ -13,14 +14,6 @@
      */
     class Base
     {
-        /**
-         * _attemptSleepDelay
-         * 
-         * @access  protected
-         * @var     int (default: 2000)
-         */
-        protected $_attemptSleepDelay = 2000;
-
         /**
          * _debugMode
          * 
@@ -36,6 +29,14 @@
          * @var     string (default: 'plain/text')
          */
         protected $_expectedResponseContentType = 'plain/text';
+
+        /**
+         * _failedAttemptDelay
+         * 
+         * @access  protected
+         * @var     int (default: 2000)
+         */
+        protected $_failedAttemptDelay = 2000;
 
         /**
          * _ignoreErrors
@@ -68,6 +69,17 @@
          * @var     int (default: 2)
          */
         protected $_maxAttempts = 2;
+
+        /**
+         * _quiet
+         * 
+         * Whether or not messages should be logged to the system when closures
+         * fail.
+         * 
+         * @access  protected
+         * @var     bool (default: false)
+         */
+        protected $_quiet = false;
 
         /**
          * _requestApproach
@@ -153,45 +165,24 @@
         /**
          * _attempt
          * 
-         * Method which accepts a closure, and repeats calling it until
-         * $maxAttempts have been made.
-         * 
-         * This was added to account for requests failing (for a variety of
-         * reasons).
+         * Uses onassar\RiskyClosure\Base to facilitate closure attempts with
+         * sleep, max attempt and log closure properties.
          * 
          * @access  protected
          * @param   \Closure $closure
-         * @param   int $attempt (default: 1)
          * @return  null|string
          */
-        protected function _attempt(\Closure $closure, int $attempt = 1): ?string
+        protected function _attempt(\Closure $closure): ?string
         {
-            try {
-                $args = array();
-                $response = call_user_func_array($closure, $args);
-                if ($attempt !== 1) {
-                    $msg = 'Subsequent success on attempt #' . ($attempt);
-                    $this->_log($msg);
-                }
-                return $response;
-            } catch (\Exception $exception) {
-                $msg = 'Failed closure';
-                $this->_log($msg);
-                $msg = $exception->getMessage();
-                $this->_log($msg);
-                $maxAttempts = $this->_maxAttempts;
-                if ($attempt < $maxAttempts) {
-                    $delay = $this->_attemptSleepDelay;
-                    $msg = 'Going to sleep for ' . ($delay);
-                    $this->_log($msg);
-                    $this->_sleep($delay);
-                    $response = $this->_attempt($closure, $attempt + 1);
-                    return $response;
-                }
-                $msg = 'Failed attempt';
-                $this->_log($msg);
-            }
-            return null;
+            $riskyClosure = new RiskyClosure\Base($closure);
+            $delay = $this->_failedAttemptDelay;
+            $maxAttempts = $this->_maxAttempts;
+            $logClosure = array($this, 'log');
+            $riskyClosure->setDelay($delay);
+            $riskyClosure->setMaxAttempts($maxAttempts);
+            $riskyClosure->setLogClosure($logClosure);
+            list($exception, $response) = $riskyClosure->attempt();
+            return $response;
         }
 
         /**
@@ -207,7 +198,7 @@
             if ($debugMode === false) {
                 return false;
             }
-            $this->_log(... $values);
+            $this->log(... $values);
             return true;
         }
 
@@ -361,27 +352,6 @@
         }
 
         /**
-         * _log
-         * 
-         * @access  protected
-         * @param   array $values,...
-         * @return  bool
-         */
-        protected function _log(... $values): bool
-        {
-            if ($this->_logClosure === null) {
-                foreach ($values as $value) {
-                    error_log($value);
-                }
-                return false;
-            }
-            $closure = $this->_logClosure;
-            $args = $values;
-            call_user_func_array($closure, $args);
-            return true;
-        }
-
-        /**
          * _parseCURLResponse
          * 
          * This method was required because at times the cURL requests would not
@@ -431,6 +401,7 @@
          * _requestURLUsingCURL
          * 
          * @see     https://stackoverflow.com/a/9183272/115025
+         * @see     https://stackoverflow.com/a/3987037/115025
          * @access  protected
          * @return  null|string
          */
@@ -448,6 +419,11 @@
                 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 $response = curl_exec($ch);
+                $code = curl_errno($ch);
+                if ($code > 0) {
+                    $msg = curl_error($ch);
+                    throw new \Exception($msg, $code);
+                }
                 curl_close($ch);
                 return $response;
             };
@@ -583,6 +559,34 @@
         }
 
         /**
+         * log
+         * 
+         * Method which handles logging of any messaging associated with the
+         * remote request. It ought to be public to ensure it works well with
+         * onassar\RiskyClosure\Base.
+         * 
+         * @access  public
+         * @param   array $values,...
+         * @return  bool
+         */
+        public function log(... $values): bool
+        {
+            if ($this->_quiet === true) {
+                return false;
+            }
+            if ($this->_logClosure === null) {
+                foreach ($values as $value) {
+                    error_log($value);
+                }
+                return false;
+            }
+            $closure = $this->_logClosure;
+            $args = $values;
+            call_user_func_array($closure, $args);
+            return true;
+        }
+
+        /**
          * mergeRequestData
          * 
          * @access  public
@@ -599,15 +603,15 @@
         }
 
         /**
-         * setAttemptSleepDelay
+         * setAttemptClosure
          * 
          * @access  public
-         * @param   int $attemptSleepDelay
+         * @param   \Closure $attemptClosure
          * @return  void
          */
-        public function setAttemptSleepDelay(int $attemptSleepDelay): void
+        public function setAttemptClosure(\Closure $attemptClosure): void
         {
-            $this->_attemptSleepDelay = $attemptSleepDelay;
+            $this->_attemptClosure = $attemptClosure;
         }
 
         /**
@@ -635,6 +639,18 @@
         }
 
         /**
+         * setFailedAttemptDelay
+         * 
+         * @access  public
+         * @param   int $failedAttemptDelay
+         * @return  void
+         */
+        public function setFailedAttemptDelay(int $failedAttemptDelay): void
+        {
+            $this->_failedAttemptDelay = $failedAttemptDelay;
+        }
+
+        /**
          * setLogClosure
          * 
          * @access  public
@@ -656,6 +672,18 @@
         public function setMaxAttempts(int $maxAttempts): void
         {
             $this->_maxAttempts = $maxAttempts;
+        }
+
+        /**
+         * setQuiet
+         * 
+         * @access  public
+         * @param   null|bool $quiet
+         * @return  void
+         */
+        public function setQuiet(?bool $quiet): void
+        {
+            $this->_quiet = $quiet ?? $this->_quiet;
         }
 
         /**

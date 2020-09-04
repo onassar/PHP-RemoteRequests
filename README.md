@@ -107,6 +107,10 @@ echo $response;
 exit(0);
 ```
 
+### Note
+Requires
+[PHP-RiskyClosure](https://github.com/onassar/PHP-RiskyClosure).
+
 ### Related libraries
 - [getstencil/PHP-Iconfinder](https://github.com/getstencil/PHP-Iconfinder)
 - [onassar/PHP-Icons8](https://github.com/onassar/PHP-Icons8)
