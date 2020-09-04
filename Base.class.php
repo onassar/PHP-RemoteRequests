@@ -63,14 +63,6 @@
         protected $_logFunction = null;
 
         /**
-         * _logTraceFunction
-         * 
-         * @access  protected
-         * @var     null|callable (default: null)
-         */
-        protected $_logTraceFunction = null;
-
-        /**
          * _maxAttempts
          * 
          * @access  protected
@@ -138,6 +130,14 @@
         protected $_streamOptions = array();
 
         /**
+         * _traceLogFunction
+         * 
+         * @access  protected
+         * @var     null|callable (default: null)
+         */
+        protected $_traceLogFunction = null;
+
+        /**
          * _url
          * 
          * @access  protected
@@ -194,10 +194,10 @@
             $delay = $this->_failedAttemptDelay;
             $maxAttempts = $this->_maxAttempts;
             $logFunction = array($this, 'log');
-            $logTraceFunction = array($this, 'logTrace');
+            $traceLogFunction = array($this, 'logTrace');
             $riskyClosure->setDelay($delay);
             $riskyClosure->setLogFunction($logFunction);
-            $riskyClosure->setLogTraceFunction($logTraceFunction);
+            $riskyClosure->setTraceLogFunction($traceLogFunction);
             $riskyClosure->setMaxAttempts($maxAttempts);
             list($exception, $response) = $riskyClosure->attempt();
             return $response;
@@ -643,12 +643,12 @@
             if ($this->_quiet === true) {
                 return false;
             }
-            if ($this->_logTraceFunction === null) {
+            if ($this->_traceLogFunction === null) {
                 $trace = implode("\n", $trace);
                 error_log($trace);
                 return false;
             }
-            $closure = $this->_logTraceFunction;
+            $closure = $this->_traceLogFunction;
             $args = array($trace);
             call_user_func_array($closure, $args);
             return true;
@@ -728,18 +728,6 @@
         public function setLogFunction(callable $logFunction): void
         {
             $this->_logFunction = $logFunction;
-        }
-
-        /**
-         * setLogTraceFunction
-         * 
-         * @access  public
-         * @param   callable $logTraceFunction
-         * @return  void
-         */
-        public function setLogTraceFunction(callable $logTraceFunction): void
-        {
-            $this->_logTraceFunction = $logTraceFunction;
         }
 
         /**
@@ -841,6 +829,18 @@
         public function setStreamOptions(array $streamOptions): void
         {
             $this->_streamOptions = $streamOptions;
+        }
+
+        /**
+         * setTraceLogFunction
+         * 
+         * @access  public
+         * @param   callable $traceLogFunction
+         * @return  void
+         */
+        public function setTraceLogFunction(callable $traceLogFunction): void
+        {
+            $this->_traceLogFunction = $traceLogFunction;
         }
 
         /**
