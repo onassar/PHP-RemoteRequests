@@ -12,6 +12,9 @@ Features include:
 - JSON parsing
 - `POST` requests (currently limited to `stream` requests)
 
+### Requirements
+- [PHP-RiskyClosure](https://github.com/onassar/PHP-RiskyClosure)
+
 ### Sample Request
 
 ``` php
@@ -110,10 +113,6 @@ exit(0);
 
 ### Todo
 - Support `POST` calls using the `cURL` request approach
-
-### Note
-Requires
-[PHP-RiskyClosure](https://github.com/onassar/PHP-RiskyClosure).
 
 ### Related libraries
 - [getstencil/PHP-Iconfinder](https://github.com/getstencil/PHP-Iconfinder)
