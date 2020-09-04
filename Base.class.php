@@ -55,12 +55,12 @@
         protected $_lastRemoteRequestHeaders = array();
 
         /**
-         * _logClosure
+         * _logFunction
          * 
          * @access  protected
-         * @var     null|Closure (default: null)
+         * @var     null|callable (default: null)
          */
-        protected $_logClosure = null;
+        protected $_logFunction = null;
 
         /**
          * _maxAttempts
@@ -177,10 +177,10 @@
             $riskyClosure = new RiskyClosure\Base($closure);
             $delay = $this->_failedAttemptDelay;
             $maxAttempts = $this->_maxAttempts;
-            $logClosure = array($this, 'log');
+            $logFunction = array($this, 'log');
             $riskyClosure->setDelay($delay);
             $riskyClosure->setMaxAttempts($maxAttempts);
-            $riskyClosure->setLogClosure($logClosure);
+            $riskyClosure->setLogFunction($logFunction);
             list($exception, $response) = $riskyClosure->attempt();
             return $response;
         }
@@ -574,13 +574,13 @@
             if ($this->_quiet === true) {
                 return false;
             }
-            if ($this->_logClosure === null) {
+            if ($this->_logFunction === null) {
                 foreach ($values as $value) {
                     error_log($value);
                 }
                 return false;
             }
-            $closure = $this->_logClosure;
+            $closure = $this->_logFunction;
             $args = $values;
             call_user_func_array($closure, $args);
             return true;
@@ -651,15 +651,15 @@
         }
 
         /**
-         * setLogClosure
+         * setLogFunction
          * 
          * @access  public
-         * @param   \Closure $closure
+         * @param   callable $logFunction
          * @return  void
          */
-        public function setLogClosure(\Closure $closure): void
+        public function setLogFunction(callable $logFunction): void
         {
-            $this->_logClosure = $closure;
+            $this->_logFunction = $logFunction;
         }
 
         /**
