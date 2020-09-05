@@ -122,6 +122,18 @@
         protected $_requestTimeout = 10;
 
         /**
+         * _riskyClosure
+         * 
+         * This stores a reference to the RiskyClosure\Base object that gets
+         * created during the attempt flow for remote requests. At the time of
+         * documentation, it's only used by during the trace logging flow.
+         * 
+         * @access  protected
+         * @var     null|RiskyClosure\Base (default: null)
+         */
+        protected $_riskyClosure = null;
+
+        /**
          * _streamOptions
          * 
          * @access  protected
@@ -191,6 +203,7 @@
         protected function _attempt(\Closure $closure): ?string
         {
             $riskyClosure = new RiskyClosure\Base($closure);
+            $this->_riskyClosure = $riskyClosure;
             $delay = $this->_failedAttemptDelay;
             $maxAttempts = $this->_maxAttempts;
             $logFunction = array($this, 'log');
@@ -649,7 +662,7 @@
                 return false;
             }
             $closure = $this->_traceLogFunction;
-            $args = array($trace);
+            $args = array($trace, $this->_riskyClosure);
             call_user_func_array($closure, $args);
             return true;
         }
