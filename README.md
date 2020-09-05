@@ -12,7 +12,7 @@ Features include:
 - JSON parsing
 - `POST` requests (currently limited to `stream` requests)
 
-### Requirements
+### Requires
 - [PHP-RiskyClosure](https://github.com/onassar/PHP-RiskyClosure)
 
 ### Sample Request

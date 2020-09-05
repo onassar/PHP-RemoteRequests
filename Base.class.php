@@ -204,11 +204,11 @@
         {
             $riskyClosure = new RiskyClosure\Base($closure);
             $this->_riskyClosure = $riskyClosure;
-            $delay = $this->_failedAttemptDelay;
+            $failedAttemptDelay = $this->_failedAttemptDelay;
             $maxAttempts = $this->_maxAttempts;
             $logFunction = array($this, 'log');
             $traceLogFunction = array($this, 'logTrace');
-            $riskyClosure->setDelay($delay);
+            $riskyClosure->setFailedAttemptDelay($failedAttemptDelay);
             $riskyClosure->setLogFunction($logFunction);
             $riskyClosure->setTraceLogFunction($traceLogFunction);
             $riskyClosure->setMaxAttempts($maxAttempts);
