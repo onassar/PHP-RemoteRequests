@@ -39,6 +39,14 @@
         protected $_failedAttemptDelay = 2000;
 
         /**
+         * _failedAttemptLoggingEvaluator
+         * 
+         * @access  protected
+         * @var     null|callable (default: null)
+         */
+        protected $_failedAttemptLoggingEvaluator = null;
+
+        /**
          * _ignoreErrors
          * 
          * @access  protected
@@ -205,13 +213,15 @@
             $riskyClosure = new RiskyClosure\Base($closure);
             $this->_riskyClosure = $riskyClosure;
             $failedAttemptDelay = $this->_failedAttemptDelay;
-            $maxAttempts = $this->_maxAttempts;
+            $failedAttemptLoggingEvaluator = $this->_failedAttemptLoggingEvaluator;
             $logFunction = array($this, 'log');
+            $maxAttempts = $this->_maxAttempts;
             $traceLogFunction = array($this, 'logTrace');
             $riskyClosure->setFailedAttemptDelay($failedAttemptDelay);
+            $riskyClosure->setFailedAttemptLoggingEvaluator($failedAttemptLoggingEvaluator);
             $riskyClosure->setLogFunction($logFunction);
-            $riskyClosure->setTraceLogFunction($traceLogFunction);
             $riskyClosure->setMaxAttempts($maxAttempts);
+            $riskyClosure->setTraceLogFunction($traceLogFunction);
             list($exception, $response) = $riskyClosure->attempt();
             return $response;
         }
@@ -729,6 +739,18 @@
         public function setFailedAttemptDelay(int $failedAttemptDelay): void
         {
             $this->_failedAttemptDelay = $failedAttemptDelay;
+        }
+
+        /**
+         * setFailedAttemptLoggingEvaluator
+         * 
+         * @access  public
+         * @param   null|callable $callback
+         * @return  void
+         */
+        public function setFailedAttemptLoggingEvaluator(?callable $callback): void
+        {
+            $this->_failedAttemptLoggingEvaluator = $callback;
         }
 
         /**
