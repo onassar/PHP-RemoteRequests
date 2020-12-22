@@ -79,6 +79,17 @@
         protected $_maxAttempts = 2;
 
         /**
+         * _parsedResponse
+         * 
+         * The last response, parsed depending on the content type defined for
+         * the remote request.
+         * 
+         * @access  protected
+         * @var     mixed (default: null)
+         */
+        protected $_parsedResponse = null;
+
+        /**
          * _postContent
          * 
          * @access  protected
@@ -404,6 +415,7 @@
         {
             $response = $this->_requestURL();
             $response = $this->_getParsedTextResponse($response) ?? $this->_getParsedJSONResponse($response) ?? null;
+            $this->_parsedResponse = $response;
             return $response;
         }
 
@@ -624,6 +636,18 @@
         {
             $headers = $this->_lastRemoteRequestHeaders ?? array();
             return $headers;
+        }
+
+        /**
+         * getParsedResponse
+         * 
+         * @access  public
+         * @return  mixed
+         */
+        public function getParsedResponse()
+        {
+            $parsedResponse = $this->_parsedResponse;
+            return $parsedResponse;
         }
 
         /**
