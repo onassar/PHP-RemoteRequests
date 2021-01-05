@@ -21,8 +21,8 @@
          * desirable, regardless of how many objects are returned by an API
          * call.
          * 
-         * If this value is greater than the $maxResultsPerRequest value, then
-         * recursive calls may be made.
+         * If this value is greater than the $maxResultsSupportedPerRequest
+         * value, then recursive calls may be made.
          * 
          * @access  protected
          * @var     null|int (default: null)
@@ -30,16 +30,17 @@
         protected $_limit = null;
 
         /**
-         * _maxResultsPerRequest
+         * _maxResultsSupportedPerRequest
          * 
-         * The $maxResultsPerRequest property defines the maximum number of objects that
-         * can be retrieved through an API endpoint. This is defined by _them_,
-         * and has nothing to do with application and/or business logic.
+         * The $maxResultsSupportedPerRequest property defines the maximum
+         * number of objects that can be retrieved through an API endpoint. This
+         * is defined by _them_, and has nothing to do with application and/or
+         * business logic.
          * 
          * @access  protected
          * @var     null|int (default: null)
          */
-        protected $_maxResultsPerRequest = null;
+        protected $_maxResultsSupportedPerRequest = null;
 
         /**
          * _offset
@@ -101,9 +102,9 @@
         protected function _getResultsPerRequest(): int
         {
             $limit = $this->_limit;
-            $maxResultsPerRequest = $this->_maxResultsPerRequest;
-            $resultsPerPage = min($limit, $maxResultsPerRequest);
-            return $resultsPerPage;
+            $maxResultsSupportedPerRequest = $this->_maxResultsSupportedPerRequest;
+            $resultsPerRequest = min($limit, $maxResultsSupportedPerRequest);
+            return $resultsPerRequest;
         }
 
         /**
@@ -152,12 +153,12 @@
          * setMaxResultsPerPage
          * 
          * @access  public
-         * @param   int $maxResultsPerRequest
+         * @param   int $maxResultsSupportedPerRequest
          * @return  void
          */
-        public function setMaxResultsPerPage(int $maxResultsPerRequest): void
+        public function setMaxResultsPerPage(int $maxResultsSupportedPerRequest): void
         {
-            $this->_maxResultsPerRequest = $maxResultsPerRequest;
+            $this->_maxResultsSupportedPerRequest = $maxResultsSupportedPerRequest;
         }
 
         /**

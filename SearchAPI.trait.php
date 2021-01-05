@@ -22,12 +22,12 @@
         protected $_apiKey = null;
 
         /**
-         * _responseResultsIndex
+         * _responseResultsIndexKey
          * 
          * @access  protected
          * @var     null|string (default: null)
          */
-        protected $_responseResultsIndex = null;
+        protected $_responseResultsIndexKey = null;
 
         /**
          * _formatSearchResults
@@ -159,11 +159,12 @@
             // Request results
             $this->_setSearchRequestData($query);
             $this->_setSearchRequestURL();
-            $key = $this->_responseResultsIndex;
+            $key = $this->_responseResultsIndexKey;
             $response = $this->_getURLResponse() ?? array();
             $results = $response[$key] ?? array();
             if (empty($results) === true) {
-                return $results;
+                $persistentResults = array_merge($persistentResults, $results);
+                return $persistentResults;
             }
 
             // Format + more than enough found
@@ -173,16 +174,20 @@
             if ($mod !== 0) {
                 array_splice($results, 0, $mod);
             }
+
+            // Finish if the number we got back equals or exceeds desired count
             $persistentResults = array_merge($persistentResults, $results);
             $persistentResultsCount = count($persistentResults);
             if ($persistentResultsCount >= $this->_limit) {
                 return array_slice($persistentResults, 0, $this->_limit);
             }
-            if ($resultsCount < $this->_maxResultsPerRequest) {
+
+            // Finish if we don't think there are any more to request
+            if ($resultsCount < $this->_maxResultsSupportedPerRequest) {
                 return array_slice($persistentResults, 0, $this->_limit);
             }
 
-            // Recursively get more
+            // Recursively get more (don't use $resultsCount)
             $this->_offset += count($results);
             return $this->search($query, $persistentResults);
         }
