@@ -355,6 +355,7 @@
         protected function _getRequestStreamContext()
         {
             $options = $this->_getRequestStreamContextOptions();
+            $this->_debugModeLog('options', $options);
             $streamContext = stream_context_create($options);
             return $streamContext;
         }
@@ -518,7 +519,7 @@
         {
             $closure = function() {
                 $url = $this->_getRequestURL();
-                $this->_debugModeLog('stream', $url);
+                $this->_debugModeLog('streamRequestURL', $url);
                 $streamContext = $this->_getRequestStreamContext();
                 $response = file_get_contents($url, false, $streamContext);
                 $this->_lastRemoteRequestHeaders = $http_response_header ?? $this->_lastRemoteRequestHeaders;
@@ -668,6 +669,9 @@
             }
             if ($this->_logFunction === null) {
                 foreach ($values as $value) {
+                    if (is_array($value) === true) {
+                        $value = print_r($value, true);
+                    }
                     error_log($value);
                 }
                 return false;

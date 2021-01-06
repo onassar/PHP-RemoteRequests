@@ -170,6 +170,7 @@
             // Format + more than enough found
             $results = $this->_formatSearchResults($results, $query);
             $resultsCount = count($results);
+            $this->_debugModeLog('searchResultsCount', $resultsCount);
             $mod = $this->_offset % $this->_getResultsPerRequest();
             if ($mod !== 0) {
                 array_splice($results, 0, $mod);

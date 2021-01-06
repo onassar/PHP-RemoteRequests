@@ -57,8 +57,8 @@
         /**
          * _getPage
          * 
-         * Returns the page number that any outbound queries should be set as
-         * using the $offset to determine what the "next" page would be.
+         * Returns the page number that any outbound queries should be set to,
+         * using $offset to determine what the "next" page would be.
          * 
          * @access  protected
          * @return  int
@@ -90,6 +90,8 @@
                 'page' => $page,
                 'per_page' => $resultsPerPage
             );
+            $args = array('paginationRequestData', $paginationRequestData);
+            $this->_debugModeLog(... $args);
             return $paginationRequestData;
         }
 
