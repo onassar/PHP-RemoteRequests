@@ -385,7 +385,7 @@
             if ($requestMethod === 'POST') {
                 $options['http']['content'] = $this->_getPOSTContent();
             }
-            $options = array_merge($options, $this->_streamOptions);
+            $options = array_merge_recursive($options, $this->_streamOptions);
             return $options;
         }
 
@@ -546,18 +546,6 @@
         {
             $headers = explode("\n", $headers);
             $this->_lastRemoteRequestHeaders = $headers;
-        }
-
-        /**
-         * _setPOSTContent
-         * 
-         * @access  protected
-         * @param   string $postContent
-         * @return  void
-         */
-        protected function _setPOSTContent(string $postContent): void
-        {
-            $this->_postContent = $postContent;
         }
 
         /**
@@ -722,6 +710,27 @@
         }
 
         /**
+         * post
+         * 
+         * @throws  \Exception
+         * @access  public
+         * @param   null|string $url (default: null)
+         * @return  mixed
+         */
+        public function post(?string $url = null)
+        {
+            $this->setRequestMethod('post');
+            $url = $url ?? $this->_url ?? null;
+            if ($url === null) {
+                $msg = '$url not set';
+                throw new \Exception($msg);
+            }
+            $this->setURL($url);
+            $response = $this->_getURLResponse();
+            return $response;
+        }
+
+        /**
          * setAttemptClosure
          * 
          * @access  public
@@ -803,6 +812,18 @@
         public function setMaxAttempts(int $maxAttempts): void
         {
             $this->_maxAttempts = $maxAttempts;
+        }
+
+        /**
+         * setPOSTContent
+         * 
+         * @access  public
+         * @param   string $postContent
+         * @return  void
+         */
+        public function setPOSTContent(string $postContent): void
+        {
+            $this->_postContent = $postContent;
         }
 
         /**
