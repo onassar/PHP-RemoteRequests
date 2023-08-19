@@ -640,6 +640,21 @@
         }
 
         /**
+         * getStatusCode
+         * 
+         * @link    https://stackoverflow.com/a/52662522/115025
+         * @access  public
+         * @return  string
+         */
+        public function getStatusCode(): string
+        {
+            $statusLine = $this->_lastRemoteRequestHeaders[0] ?? '';
+            preg_match('{HTTP\/\S*\s(\d{3})}', $statusLine, $match);
+            $statusCode = $match[1];
+            return $statusCode;
+        }
+
+        /**
          * log
          * 
          * Method which handles logging of any messaging associated with the
