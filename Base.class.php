@@ -650,7 +650,7 @@
         {
             $statusLine = $this->_lastRemoteRequestHeaders[0] ?? '';
             preg_match('{HTTP\/\S*\s(\d{3})}', $statusLine, $match);
-            $statusCode = $match[1];
+            $statusCode = $match[1] ?? '';
             return $statusCode;
         }
 
